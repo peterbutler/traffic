@@ -88,6 +88,7 @@
 			}
 			if ( traveler.next_place == null || traveler.has_arrived( traveler.next_place ) ) {
 
+
 				if ( traveler.next_place !== null ){
 					if ( traveler.last_place > traveler.next_place ){
 						path_key = traveler.last_place + "." + traveler.next_place;
@@ -238,6 +239,9 @@
 				if ( this.next_place != null ){
 					this.last_place = this.next_place;
 				}
+				this.x == places[ this.last_place ].x;
+				this.y == places[ this.last_place ].y;
+
 				this.history[ this.history.length ] = this.last_place;
 				goal = places[ this.goal_place_index ];
 				x_diff = this.x - goal.x;
