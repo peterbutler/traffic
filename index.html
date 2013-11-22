@@ -19,16 +19,15 @@
 		// Place canvas
 		var canvas_element = document.getElementById( "place-canvas" );
 		var context = canvas_element.getContext( "2d" );
-		diameter = 3;
 		context.beginPath();
-		context.arc( 3, 3, diameter , 0, 2 * Math.PI );
+		context.arc( game.sizes.place, game.sizes.place, game.sizes.place , 0, 2 * Math.PI );
 		context.stroke();
 
 		var canvas_element = document.getElementById( "traveler-canvas" );
 		var context = canvas_element.getContext( "2d" );
 		diameter = 1;
 		context.beginPath();
-		context.arc( 2, 2, diameter , 0, 2 * Math.PI );
+		context.arc( game.sizes.traveler, game.sizes.traveler, game.sizes.traveler , 0, 2 * Math.PI );
 		context.strokeStyle = '#ff0000';
 		context.stroke();
 	}
@@ -38,9 +37,14 @@
 			potential_places: false,
 			goals:            true,
 		},
-		traveler_count: 100,
+		traveler_count: 50,
 		place_count:    500,
 		single_goal:    true,
+
+		sizes: {
+			place: 6,
+			traveler: 4,
+		}
 	}
 
     var mainloop = function() {
@@ -147,7 +151,7 @@
 
 		for ( var count in places ){
 			place = places[ count ];
-			context.drawImage(place_canvas, place.x - 3, place.y - 3 );
+			context.drawImage(place_canvas, place.x - game.sizes.place, place.y - game.sizes.place );
 		}
 
 
@@ -184,7 +188,7 @@
 		}
 		for ( var count in travelers ){
 			traveler = travelers[ count ];
-			context.drawImage(traveler_canvas, traveler.x - 2, traveler.y - 2 );
+			context.drawImage(traveler_canvas, traveler.x - game.sizes.traveler, traveler.y - game.sizes.traveler );
 
 			// Draw goal
 			if ( game.displays.goals ) {
@@ -308,6 +312,7 @@
 			place = {};
 			place.x = Math.floor( ( Math.random() * canvas.width ) + 1 );
 			place.y = Math.floor( ( Math.random() * canvas.height ) + 1 );
+
 			places[ count ] = place;
 	    }
 
@@ -324,7 +329,7 @@
 		<a href="#" onclick="">reset</a>
 		<a href="#" id="toggle-pathfinding-display">pathfinding display</a>
 		<canvas id="game-canvas" style="border:1px solid #ccc"></canvas>
-		<canvas id="place-canvas" width="6" height="6"></canvas>
-		<canvas id="traveler-canvas" width="6" height="6"></canvas>
+		<canvas id="place-canvas" width="12" height="12"></canvas>
+		<canvas id="traveler-canvas" width="8" height="8"></canvas>
 	</body>
 </html>
