@@ -13,8 +13,6 @@
 		document.getElementById( "game-canvas" ).setAttribute( "height", canvas.height );
 	};
 
-
-
 	var game = {
 		displays: {
 			potential_places: false,
@@ -25,25 +23,23 @@
 		single_goal:    true,
 	}
 
-	var framerate = {};
-	function get_framerate(){
-        if ( typeof prev_time === 'undefined' ){
-	        prev_time = performance.now();
-	        framerate.frames = 0;
-	        framerate.time   = 0;
-	        return 0;
-        }
-        time_delta = performance.now() - parseInt( prev_time );
-        // we did 1 frame in time_delta milliseconds
-        current_framerate = 1 / time_delta * 1000;
-        framerate.frames++;
-        framerate.time += time_delta;
-        document.getElementById('framerate').innerHTML = Math.round( current_framerate );
-        if ( Math.round( performance.now() % 1000 ) < 100 ){
-	        document.getElementById('framerate-avg').innerHTML = Math.round( framerate['frames'] / ( framerate['time'] / 1000 ) );
-        }
-        prev_time = performance.now();
-	}
+	var usage_history = [];
+	var places = new Array();
+	init_places( game.place_count );
+    var valid_places = new Array();
+    var travelers = new Array();
+	init_travelers( game.traveler_count );
+
+    // start the mainloop
+    animFrame( recursiveAnim );
+
+
+    var animFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            null ;
 
     var mainloop = function() {
 	    clear_canvas();
@@ -53,34 +49,10 @@
 
     };
 
-	function clear_canvas(){
-		var canvas_element  = document.getElementById( "game-canvas" );
-		var context = canvas_element.getContext("2d");
-		context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
-	}
-
-    var animFrame = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            null ;
-
     var recursiveAnim = function() {
         mainloop();
         animFrame( recursiveAnim );
     };
-
-	var usage_history = [];
-
-	var places = new Array();
-	init_places( game.place_count );
-    var valid_places = new Array();
-    var travelers = new Array();
-	init_travelers( game.traveler_count );
-
-    // start the mainloop
-    animFrame( recursiveAnim );
 
     function updateGame(){
 		// Game logic?

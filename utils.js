@@ -26,3 +26,9 @@ function get_framerate(){
     }
     prev_time = performance.now();
 }
+
+function clear_canvas(){
+	var canvas_element  = document.getElementById( "game-canvas" );
+	var context = canvas_element.getContext("2d");
+	context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
+}
