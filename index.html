@@ -9,7 +9,8 @@
 			goals:            true,
 		},
 		traveler_count: 100,
-		place_count:    1000,
+		place_count:    2000,
+		single_goal:    true,
 	}
 
 
@@ -195,8 +196,12 @@
 		    traveler = {};
 		    traveler.arrived = false;
 		    traveler.start_place_index = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
-		    while( traveler.goal_place_index == null || traveler.goal_place_index == traveler.start_place_index ){
-			    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
+		    if ( game.single_goal ){
+			    traveler.goal_place_index = 0;
+		    } else {
+			    while( traveler.goal_place_index == null || traveler.goal_place_index == traveler.start_place_index ){
+				    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
+			    }
 		    }
 		    traveler.last_place = traveler.start_place_index;
 		    traveler.next_place = null;
