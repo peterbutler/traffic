@@ -3,6 +3,15 @@
 	<head>
 		<title>Traffic</title>
 		<script type="text/javascript">
+	var game = {
+		displays: {
+			potential_places: false,
+			goals:            true,
+		},
+		traveler_count: 10,
+		place_count:    10,
+	}
+
 
     var mainloop = function() {
 	    clear_canvas();
@@ -33,10 +42,10 @@
     canvas.height  = 1000;
 
 	var places = new Array();
-	init_places( 500 );
+	init_places( game.place_count );
     var valid_places = new Array();
     var travelers = new Array();
-	init_travelers( 500 );
+	init_travelers( game.traveler_count );
 
     // start the mainloop
     animFrame( recursiveAnim );
@@ -97,16 +106,16 @@
 
 
 
-/*
-		for ( var count in valid_places ){
-			place = places[ valid_places[ count ] ];
-			diameter = 10;
-			context.beginPath();
-			context.arc( place.x, place.y, diameter , 0, 2 * Math.PI );
-			context.strokeStyle = '#006B54';
-			context.stroke();
+		if ( game.displays.potential_places ) {
+			for ( var count in valid_places ){
+				place = places[ valid_places[ count ] ];
+				diameter = 10;
+				context.beginPath();
+				context.arc( place.x, place.y, diameter , 0, 2 * Math.PI );
+				context.strokeStyle = '#006B54';
+				context.stroke();
+			}
 		}
-*/
 
 
 
@@ -119,12 +128,14 @@
 			context.stroke();
 
 			// Draw goal
-			context.beginPath();
-			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 5 , 0, 2 * Math.PI );
-			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 10 , 0, 2 * Math.PI );
-			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 15 , 0, 2 * Math.PI );
-			context.strokeStyle = '#006B54';
-			context.stroke();
+			if ( game.displays.goals ) {
+				context.beginPath();
+				context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 5 , 0, 2 * Math.PI );
+				context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 10 , 0, 2 * Math.PI );
+				context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 15 , 0, 2 * Math.PI );
+				context.strokeStyle = '#006B54';
+				context.stroke();
+			}
 
 			// Draw next chosen
 			context.beginPath();
@@ -237,6 +248,8 @@
 		</script>
 	</head>
 	<body>
+		<a href="#" onclick="">reset</a>
+		<a href="#" id="toggle-pathfinding-display">pathfinding display</a>
 		<canvas id="game-canvas" width="1000" height="1000" style="border:1px solid #ccc"></canvas>
 	</body>
 </html>
