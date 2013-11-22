@@ -4,6 +4,17 @@
 		<title>Traffic</title>
 		<script type="text/javascript" src="utils.js"></script>
 		<script type="text/javascript">
+    var canvas = new Object;
+    canvas.width   = 1000;
+    canvas.height  = 1000;
+
+	window.onload = function(){
+		document.getElementById( "game-canvas" ).setAttribute( "width", canvas.width );
+		document.getElementById( "game-canvas" ).setAttribute( "height", canvas.height );
+	};
+
+
+
 	var game = {
 		displays: {
 			potential_places: false,
@@ -59,9 +70,6 @@
         mainloop();
         animFrame( recursiveAnim );
     };
-    var canvas = new Object;
-    canvas.width   = 1000;
-    canvas.height  = 1000;
 
 	var usage_history = [];
 
@@ -305,8 +313,8 @@
 	    for( count = 0; count < number_of_places; ++count ) {
 			// Set up place positions
 			place = {};
-			place.x = Math.floor( ( Math.random() * 1000 ) + 1 );
-			place.y = Math.floor( ( Math.random() * 1000 ) + 1 );
+			place.x = Math.floor( ( Math.random() * canvas.width ) + 1 );
+			place.y = Math.floor( ( Math.random() * canvas.height ) + 1 );
 			places[ count ] = place;
 	    }
 
@@ -322,6 +330,6 @@
 		<div id="framerate-avg">--</div>
 		<a href="#" onclick="">reset</a>
 		<a href="#" id="toggle-pathfinding-display">pathfinding display</a>
-		<canvas id="game-canvas" width="1000" height="1000" style="border:1px solid #ccc"></canvas>
+		<canvas id="game-canvas" style="border:1px solid #ccc"></canvas>
 	</body>
 </html>
