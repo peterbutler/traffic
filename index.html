@@ -23,24 +23,6 @@
 		single_goal:    true,
 	}
 
-	var usage_history = [];
-	var places = new Array();
-	init_places( game.place_count );
-    var valid_places = new Array();
-    var travelers = new Array();
-	init_travelers( game.traveler_count );
-
-    // start the mainloop
-    animFrame( recursiveAnim );
-
-
-    var animFrame = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            null ;
-
     var mainloop = function() {
 	    clear_canvas();
         updateGame();
@@ -49,10 +31,34 @@
 
     };
 
+	function clear_canvas(){
+		var canvas_element  = document.getElementById( "game-canvas" );
+		var context = canvas_element.getContext("2d");
+		context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
+	}
+
+    var animFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            null ;
+
     var recursiveAnim = function() {
         mainloop();
         animFrame( recursiveAnim );
     };
+
+	var usage_history = [];
+
+	var places = new Array();
+	init_places( game.place_count );
+    var valid_places = new Array();
+    var travelers = new Array();
+	init_travelers( game.traveler_count );
+
+    // start the mainloop
+    animFrame( recursiveAnim );
 
     function updateGame(){
 		// Game logic?
