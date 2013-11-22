@@ -36,7 +36,6 @@
         mainloop();
         animFrame( recursiveAnim );
     };
-
     var canvas = new Object;
     canvas.width   = 1000;
     canvas.height  = 1000;
@@ -96,6 +95,8 @@
 		var canvas_element = document.getElementById( "game-canvas" );
 		var context = canvas_element.getContext( "2d" );
 
+		var usage_history = [];
+
 		for ( var count in places ){
 			place = places[ count ];
 			diameter = 3;
@@ -149,19 +150,37 @@
 				if ( traveler.history[ history_index ] == null ){
 					continue;
 				}
-				place = places[ traveler.history[ history_index ] ];
-				next_place = places[ traveler.history[ history_index + 1 ] ];
+				last_place_index = traveler.history[ history_index ];
+				place = places[ last_place_index ];
+				next_place_index = traveler.history[ history_index + 1 ];
+				next_place = places[ next_place_index ];
 				if ( next_place == null ) {
 					next_place = {
 						x: traveler.x,
 						y: traveler.y,
+					}
+					stroke_width = 1;
+				} else {
+					if ( last_place_index > next_place_index ){
+						key = last_place_index + "." + next_place_index;
+					} else {
+						key = next_place_index + "." + last_place_index;
+					}
+					if (usage_history[key] == null ){
+						usage_history[key] = 1;
+					} else {
+						usage_history[key] += .5;
+					}
+					stroke_width = Math.round( usage_history[key] );
+					if(stroke_width > 10){
+						stroke_width = 10;
 					}
 				}
 
 				context.beginPath();
 				context.moveTo( place.x, place.y );
 				context.lineTo( next_place.x, next_place.y );
-				context.lineWidth = 1;
+				context.lineWidth = stroke_width;
 				context.strokeStyle = '#000';
 				context.stroke();
 
@@ -169,7 +188,6 @@
 			context.strokeStyle = '#000';
 		}
     }
-
 
 
     function init_travelers( number_of_travelers ){
