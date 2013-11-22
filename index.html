@@ -8,8 +8,8 @@
 			potential_places: false,
 			goals:            true,
 		},
-		traveler_count: 10,
-		place_count:    10,
+		traveler_count: 100,
+		place_count:    1000,
 	}
 
 
@@ -143,6 +143,29 @@
 			context.strokeStyle = '#CC3232';
 			context.stroke();
 
+			// Draw history
+			for ( var history_index in traveler.history ){
+				history_index = parseInt( history_index );
+				if ( traveler.history[ history_index ] == null ){
+					continue;
+				}
+				place = places[ traveler.history[ history_index ] ];
+				next_place = places[ traveler.history[ history_index + 1 ] ];
+				if ( next_place == null ) {
+					next_place = {
+						x: traveler.x,
+						y: traveler.y,
+					}
+				}
+
+				context.beginPath();
+				context.moveTo( place.x, place.y );
+				context.lineTo( next_place.x, next_place.y );
+				context.lineWidth = 1;
+				context.strokeStyle = '#000';
+				context.stroke();
+
+			}
 			context.strokeStyle = '#000';
 		}
     }
@@ -153,14 +176,17 @@
 	    for( count = 0; count < number_of_travelers; ++count ) {
 		    traveler = {};
 		    traveler.arrived = false;
-		    traveler.start_place_index = count;
-		    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
+		    traveler.start_place_index = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
+		    while( traveler.goal_place_index == null || traveler.goal_place_index == traveler.start_place_index ){
+			    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
+		    }
 		    traveler.last_place = traveler.start_place_index;
 		    traveler.next_place = null;
 		    traveler.x          = places[ traveler.start_place_index ].x;
 		    traveler.y          = places[ traveler.start_place_index ].y;
 		    traveler.x_speed = 0;
 		    traveler.y_speed = 0;
+		    traveler.history = [];
 		    traveler.has_arrived = function( place_index ){
 				if( Math.round( this.x ) == places[ place_index ].x &&
 					Math.round( this.y ) == places[ place_index ].y
@@ -172,9 +198,10 @@
 
 			traveler.choose_next_place = function(){
 				valid_places = new Array;
-				if ( this.next_place != -1){
+				if ( this.next_place != null ){
 					this.last_place = this.next_place;
 				}
+				this.history[ this.history.length ] = this.last_place;
 				goal = places[ this.goal_place_index ];
 				x_diff = this.x - goal.x;
 				y_diff = this.y - goal.y;
