@@ -38,7 +38,7 @@
 			goals:            true,
 		},
 		traveler_count: 50,
-		place_count:    500,
+		place_count:    50,
 		single_goal:    true,
 
 		sizes: {
@@ -86,17 +86,14 @@
 
     function updateGame(){
 		// Game logic?
-
+		some_still_traveling = false
 		for( var count in travelers ){
 			traveler = travelers[ count ];
 			if ( traveler.arrived ){
 				continue;
 			}
-			// Have we reached our final goal?
-			if ( traveler.has_arrived( traveler.goal_place_index ) ){
-				traveler.arrived = true;
-				travelers[ count ] = traveler;
-			}
+
+			some_still_traveling = true;
 			if ( traveler.next_place == null || traveler.has_arrived( traveler.next_place ) ) {
 
 
@@ -113,7 +110,12 @@
 						usage_history[ path_key ] += .5;
 					}
 				}
-
+				// Have we reached our final goal?
+				if ( traveler.has_arrived( traveler.goal_place_index ) ){
+					traveler.arrived = true;
+					travelers[ count ] = traveler;
+					continue;
+				}
 				// we need to choose a direction to go next
 				traveler.choose_next_place();
 				place = places[ traveler.next_place ];
@@ -139,6 +141,9 @@
 			traveler.x += traveler.x_speed;
 			traveler.y += traveler.y_speed;
 			travelers[ count ] = traveler;
+		}
+		if ( !some_still_traveling ){
+			console.log( "Everyone has arrived" );
 		}
     }
 
@@ -201,10 +206,12 @@
 			}
 
 			// Draw next chosen
-			context.beginPath();
-			context.arc( places[ traveler.next_place ].x, places[ traveler.next_place ].y, 5 , 0, 2 * Math.PI );
-			context.strokeStyle = '#CC3232';
-			context.stroke();
+			if ( traveler.next_place != null ){
+				context.beginPath();
+				context.arc( places[ traveler.next_place ].x, places[ traveler.next_place ].y, 5 , 0, 2 * Math.PI );
+				context.strokeStyle = '#CC3232';
+				context.stroke();
+			}
 
 			context.strokeStyle = '#000';
 		}
