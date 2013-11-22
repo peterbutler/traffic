@@ -38,8 +38,8 @@
 			goals:            true,
 		},
 		traveler_count: 50,
-		place_count:    50,
-		single_goal:    true,
+		place_count:    500,
+		single_goal:    false,
 
 		sizes: {
 			place: 6,
@@ -84,19 +84,16 @@
     // start the mainloop
     animFrame( recursiveAnim );
 
+	var did_tally = false;
     function updateGame(){
 		// Game logic?
-		some_still_traveling = false
 		for( var count in travelers ){
 			traveler = travelers[ count ];
 			if ( traveler.arrived ){
 				continue;
 			}
 
-			some_still_traveling = true;
 			if ( traveler.next_place == null || traveler.has_arrived( traveler.next_place ) ) {
-
-
 				if ( traveler.next_place !== null ){
 					if ( traveler.last_place > traveler.next_place ){
 						path_key = traveler.last_place + "." + traveler.next_place;
@@ -116,6 +113,7 @@
 					travelers[ count ] = traveler;
 					continue;
 				}
+
 				// we need to choose a direction to go next
 				traveler.choose_next_place();
 				place = places[ traveler.next_place ];
@@ -142,8 +140,28 @@
 			traveler.y += traveler.y_speed;
 			travelers[ count ] = traveler;
 		}
-		if ( !some_still_traveling ){
-			console.log( "Everyone has arrived" );
+
+		done_traveling = true;
+		for( var count in travelers ){
+			if ( ! travelers[ count ].arrived ) {
+				done_traveling = false;
+			}
+
+		}
+		if ( done_traveling && ! did_tally){
+				console.log( "Everyone has arrived" );
+				// Tally up the totals:
+				total_stops = 0;
+				total_travelers = 0;
+				for ( var count in travelers ){
+					traveler = travelers[ count ];
+					stops = traveler.history.length;
+					total_stops += stops;
+					total_travelers++;
+				}
+				average_stops = total_stops / total_travelers;
+				console.log( "AVERAGE STOPS: " + average_stops );
+				did_tally = true;
 		}
     }
 
