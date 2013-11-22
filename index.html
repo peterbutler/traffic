@@ -37,7 +37,7 @@
 			potential_places: false,
 			goals:            true,
 		},
-		traveler_count: 50,
+		traveler_count: 100,
 		place_count:    500,
 		single_goal:    false,
 
@@ -95,6 +95,8 @@
 
 			if ( traveler.next_place == null || traveler.has_arrived( traveler.next_place ) ) {
 				if ( traveler.next_place !== null ){
+					traveler.distance_traveled += get_distance( places[ traveler.last_place ], places[ traveler.next_place ] );
+					travelers[ count ] = traveler;
 					if ( traveler.last_place > traveler.next_place ){
 						path_key = traveler.last_place + "." + traveler.next_place;
 					} else {
@@ -153,14 +155,18 @@
 				// Tally up the totals:
 				total_stops = 0;
 				total_travelers = 0;
+				total_distance  = 0;
 				for ( var count in travelers ){
 					traveler = travelers[ count ];
 					stops = traveler.history.length;
 					total_stops += stops;
+					total_distance += traveler.distance_traveled;
 					total_travelers++;
 				}
 				average_stops = total_stops / total_travelers;
+				average_distance = total_distance / total_travelers;
 				console.log( "AVERAGE STOPS: " + average_stops );
+				console.log( "AVERAGE DISTANCE: " + average_distance );
 				did_tally = true;
 		}
     }
@@ -256,6 +262,7 @@
 		    traveler.x_speed = 0;
 		    traveler.y_speed = 0;
 		    traveler.history = [];
+		    traveler.distance_traveled = 0;
 		    traveler.has_arrived = function( place_index ){
 				if( Math.round( this.x ) == places[ place_index ].x &&
 					Math.round( this.y ) == places[ place_index ].y
