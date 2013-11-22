@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Traffic</title>
+		<script type="text/javascript">
+
+    var mainloop = function() {
+	    clear_canvas();
+        updateGame();
+        drawGame();
+    };
+
+	function clear_canvas(){
+		var canvas_element  = document.getElementById( "game-canvas" );
+		var context = canvas_element.getContext("2d");
+		context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
+	}
+
+    var animFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            null ;
+
+    var recursiveAnim = function() {
+        mainloop();
+        animFrame( recursiveAnim );
+    };
+
+    var canvas = new Object;
+    canvas.width   = 1000;
+    canvas.height  = 1000;
+
+	var places = new Array();
+    for( count = 0; count < 1000; ++count ) {
+		// Set up place positions
+		place = {};
+		while( place.x == null || ( place.x < 700 && place.x > 400 ) && ( place.y < 700 && place.y > 400 ) ) {
+			place.x = Math.floor( ( Math.random() * 1000 ) + 1 );
+			place.y = Math.floor( ( Math.random() * 1000 ) + 1 );
+		}
+		places[ count ] = place;
+    }
+    var valid_places = new Array();
+    var travelers = new Array();
+    for( count = 0; count< 900; ++count ) {
+	    traveler = {};
+	    traveler.arrived = false;
+	    traveler.start_place_index = count;
+	    traveler.goal_place_index  = 30;
+	    traveler.last_place = traveler.start_place_index;
+	    traveler.next_place = -1;
+	    traveler.x          = places[ traveler.start_place_index ].x;
+	    traveler.y          = places[ traveler.start_place_index ].y;
+	    traveler.x_speed = 0;
+	    traveler.y_speed = 0;
+	    traveler.has_arrived = function( place_index ){
+			if( Math.round( this.x ) == places[ place_index ].x &&
+				Math.round( this.y ) == places[ place_index ].y
+			){
+				return true;
+			}
+			return false;
+	    }
+
+		traveler.choose_next_place = function(){
+			valid_places = new Array;
+			if ( this.next_place != -1){
+				this.last_place = this.next_place;
+			}
+			goal = places[ this.goal_place_index ];
+			x_diff = this.x - goal.x;
+			y_diff = this.y - goal.y;
+			shortest_distance = null;
+			for( var place_count in places ){
+				valid = false;
+				if ( place_count == this.last_place ){ continue; }
+				place = places[ place_count ];
+
+				if ( goal.x < Math.round( this.x ) ) {
+					if ( place.x < this.x ){
+						valid = true;
+					} else {
+						valid = false;
+						continue;
+					}
+				} else {
+					if ( place.x > Math.round( this.x ) ) {
+						valid = true;
+					} else {
+						valid = false;
+						continue;
+					}
+				}
+
+				if ( goal.y < Math.round( this.y ) ) {
+					if ( place.y < this.y ){
+						valid = true;
+					} else {
+						valid = false;
+						continue;
+					}
+				} else {
+					if ( place.y > Math.round( this.y ) ) {
+						valid = true;
+					} else {
+						valid = false;
+						continue;
+					}
+				}
+
+				if ( valid ){
+					valid_places[ valid_places.length ] = place_count;
+					// this place is in the right direction.
+					distance = get_distance( this, place );
+					if ( distance < shortest_distance || shortest_distance === null ){
+						shortest_distance = distance;
+						this.next_place = place_count;
+					}
+				}
+			}
+		}
+	    travelers[ count ] = traveler;
+
+    }
+    // start the mainloop
+    animFrame( recursiveAnim );
+
+    function updateGame(){
+		// Game logic?
+
+		for( var count in travelers ){
+			traveler = travelers[ count ];
+			if ( traveler.arrived ){
+				continue;
+			}
+			// Have we reached our final goal?
+			if ( traveler.has_arrived( traveler.goal_place_index ) ){
+				traveler.arrived = true;
+				travelers[ count ] = traveler;
+			}
+			if ( traveler.next_place < 0 || traveler.has_arrived( traveler.next_place ) ) {
+				// we need to choose a direction to go next
+				traveler.choose_next_place();
+				place = places[ traveler.next_place ];
+				x_distance = traveler.x - place.x;
+				y_distance = traveler.y - place.y;
+				if ( Math.abs( x_distance ) > Math.abs( y_distance ) ){
+					traveler.x_speed = 1;
+					traveler.y_speed = Math.abs( y_distance ) / Math.abs( x_distance );
+				} else {
+					traveler.y_speed = 1;
+					traveler.x_speed = Math.abs( x_distance ) / Math.abs( y_distance );
+				}
+				if ( x_distance > 0 ){
+					traveler.x_speed = traveler.x_speed * -1;
+				}
+				if ( y_distance > 0 ){
+					traveler.y_speed = traveler.y_speed * -1;
+				}
+			}
+
+			// Now move the traveler towards the next place
+
+			traveler.x += traveler.x_speed;
+			traveler.y += traveler.y_speed;
+			travelers[ count ] = traveler;
+		}
+    }
+
+    function drawGame(){
+		var canvas_element = document.getElementById( "game-canvas" );
+		var context = canvas_element.getContext( "2d" );
+
+		for ( var count in places ){
+			place = places[ count ];
+			diameter = 3;
+			context.beginPath();
+			context.arc( place.x, place.y, diameter , 0, 2 * Math.PI );
+			context.stroke();
+		}
+
+
+/*
+		for ( var count in valid_places ){
+			place = places[ valid_places[ count ] ];
+			diameter = 10;
+			context.beginPath();
+			context.arc( place.x, place.y, diameter , 0, 2 * Math.PI );
+			context.strokeStyle = '#006B54';
+			context.stroke();
+		}
+*/
+
+
+		for ( var count in travelers ){
+			traveler = travelers[ count ];
+			diameter = 1;
+			context.beginPath();
+			context.arc( traveler.x, traveler.y, diameter , 0, 2 * Math.PI );
+			context.strokeStyle = '#ff0000';
+			context.stroke();
+
+			// Draw goal
+			context.beginPath();
+			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 5 , 0, 2 * Math.PI );
+			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 10 , 0, 2 * Math.PI );
+			context.arc( places[ traveler.goal_place_index ].x, places[ traveler.goal_place_index ].y, 15 , 0, 2 * Math.PI );
+			context.strokeStyle = '#006B54';
+			context.stroke();
+
+			// Draw next chosen
+			context.beginPath();
+			context.arc( places[ traveler.next_place ].x, places[ traveler.next_place ].y, 5 , 0, 2 * Math.PI );
+			context.strokeStyle = '#CC3232';
+			context.stroke();
+
+			context.strokeStyle = '#000';
+		}
+    }
+
+
+	function get_distance( first, second ){
+		distance = Math.sqrt( Math.pow( ( first.x - second.x ), 2) + Math.pow( ( first.y - second.y ), 2) );
+		return distance;
+	}
+		</script>
+	</head>
+	<body>
+		<canvas id="game-canvas" width="1000" height="1000" style="border:1px solid #ccc"></canvas>
+	</body>
+</html>
