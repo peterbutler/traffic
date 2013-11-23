@@ -404,6 +404,7 @@
     }
 
 	function init_places( number_of_places ){
+		places = [];
 		switch( game.options.layout ){
 			case 'grid':
 				count = 0;
@@ -463,7 +464,13 @@
 				<ul>
 				</ul>
 			</div>
-
+			<div id="parameters">
+				<ul>
+					<li><label for="traveler-count">Travelers</label><input type="text" id="traveler-count"></li>
+					<li><label for="places-count">Places</label><input type="number" id="places-count"></li>
+					<li><input type="checkbox" id="single-goal"><label for="single-goal">Single Goal</label></li>
+				</ul>
+			</div>
 		</div>
 		<canvas id="game-canvas"></canvas>
 		<canvas id="place-canvas" width="12" height="12" style="display:none"></canvas>
