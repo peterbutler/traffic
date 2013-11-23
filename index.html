@@ -53,8 +53,8 @@
 		options: {
 			layout:           'random',
 		},
-		traveler_count: 1,
-		place_count:    1000,
+		traveler_count: 50,
+		place_count:    500,
 		single_goal:    true,
 
 		sizes: {
@@ -457,17 +457,17 @@
 	</head>
 	<body style="margin:0px">
 		<div id="interface" style="position:absolute;background:#fff;opacity:.8;border:1px solid #ccc;">
-			<div id="framerate">--</div>
-			<div id="framerate-avg">--</div>
-			<a href="#"id="reset">reset</a>
+			<div><span id="framerate">--</span> FPS</div>
+			<div><span id="framerate-avg">--</span> FPS AVG</div>
+			<a href="#"id="reset">Start Over</a>
 			<div id="displays">
 				<ul>
 				</ul>
 			</div>
 			<div id="parameters">
 				<ul>
-					<li><label for="traveler-count">Travelers</label><input type="text" id="traveler-count"></li>
-					<li><label for="places-count">Places</label><input type="number" id="places-count"></li>
+					<li><input type="number" id="traveler-count" style="width:30px"><label for="traveler-count">Travelers</label></li>
+					<li><input type="number" id="places-count" style="width:30px"><label for="places-count">Places</label></li>
 					<li><input type="checkbox" id="single-goal"><label for="single-goal">Single Goal</label></li>
 				</ul>
 			</div>
