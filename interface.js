@@ -11,6 +11,7 @@ $( document ).ready(function() {
 	}
 
 
+
 	$("#reset").click( function(){
 		reset();
 		return false;

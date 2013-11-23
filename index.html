@@ -7,8 +7,8 @@
 		<script type="text/javascript" src="interface.js"></script>
 		<script type="text/javascript">
     var canvas = new Object;
-    canvas.width   = 1000;
-    canvas.height  = 1000;
+    canvas.width   = window.innerWidth;
+    canvas.height  = window.innerHeight;
 
 	var grid = [];
 
@@ -196,7 +196,7 @@
 
 		// Draw grid lines
 		for ( column = 0; column < 11; ++column ){
-			space = canvas.height / 10;
+			space = canvas.width / 10;
 			context.beginPath();
 			context.moveTo( column * space, 0 );
 			context.lineTo( column * space, canvas.height );
@@ -205,7 +205,7 @@
 			context.stroke();
 		}
 		for ( row = 0; row < 11; ++row ){
-			space = canvas.width / 10;
+			space = canvas.height / 10;
 			context.beginPath();
 			context.moveTo( 0, row * space );
 			context.lineTo( canvas.width, row * space );
@@ -454,11 +454,10 @@
 	}
 		</script>
 	</head>
-	<body>
-		<div id="framerate">--</div>
-		<div id="framerate-avg">--</div>
-		<a href="" onclick="reset();">reset</a>
-		<div id="interface">
+	<body style="margin:0px">
+		<div id="interface" style="position:absolute;background:#fff;opacity:.8;border:1px solid #ccc;">
+			<div id="framerate">--</div>
+			<div id="framerate-avg">--</div>
 			<a href="#"id="reset">reset</a>
 			<div id="displays">
 				<ul>
@@ -466,8 +465,8 @@
 			</div>
 
 		</div>
-		<canvas id="game-canvas" style="border:1px solid #ccc"></canvas>
-		<canvas id="place-canvas" width="12" height="12"></canvas>
-		<canvas id="traveler-canvas" width="8" height="8"></canvas>
+		<canvas id="game-canvas"></canvas>
+		<canvas id="place-canvas" width="12" height="12" style="display:none"></canvas>
+		<canvas id="traveler-canvas" width="8" height="8" style="display:none"></canvas>
 	</body>
 </html>
