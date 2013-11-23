@@ -41,14 +41,17 @@
 			next_chosen:      false,
 			history:          true,
 		},
-		traveler_count: 1000,
-		place_count:    1000,
-		single_goal:    false,
+		options: {
+			layout:           'grid',
+		},
+		traveler_count: 100,
+		place_count:    100,
+		single_goal:    true,
 
 		sizes: {
 			place: 6,
 			traveler: 4,
-		}
+		},
 	}
 
     var mainloop = function() {
@@ -252,12 +255,13 @@
 
 
     function init_travelers( number_of_travelers ){
+    	single_goal = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
 	    for( count = 0; count < number_of_travelers; ++count ) {
 		    traveler = {};
 		    traveler.arrived = false;
 		    traveler.start_place_index = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
 		    if ( game.single_goal ){
-			    traveler.goal_place_index = 0;
+			    traveler.goal_place_index = single_goal;
 		    } else {
 			    while( traveler.goal_place_index == null || traveler.goal_place_index == traveler.start_place_index ){
 				    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
@@ -295,19 +299,20 @@
 				shortest_distance = null;
 				for( var place_count in places ){
 					valid = false;
+
 					if ( place_count == this.last_place ){ continue; }
 					if ( in_array( place_count, this.history ) ){ continue; }
 					place = places[ place_count ];
 
-					if ( goal.x < Math.round( this.x ) ) {
-						if ( place.x < this.x ){
+					if ( goal.x <= Math.round( this.x ) ) {
+						if ( place.x <= this.x ){
 							valid = true;
 						} else {
 							valid = false;
 							continue;
 						}
 					} else {
-						if ( place.x > Math.round( this.x ) ) {
+						if ( place.x >= Math.round( this.x ) ) {
 							valid = true;
 						} else {
 							valid = false;
@@ -315,15 +320,15 @@
 						}
 					}
 
-					if ( goal.y < Math.round( this.y ) ) {
-						if ( place.y < this.y ){
+					if ( goal.y <= Math.round( this.y ) ) {
+						if ( place.y <= this.y ){
 							valid = true;
 						} else {
 							valid = false;
 							continue;
 						}
 					} else {
-						if ( place.y > Math.round( this.y ) ) {
+						if ( place.y >= Math.round( this.y ) ) {
 							valid = true;
 						} else {
 							valid = false;
@@ -348,14 +353,53 @@
     }
 
 	function init_places( number_of_places ){
-	    for( count = 0; count < number_of_places; ++count ) {
-			// Set up place positions
-			place = {};
-			place.x = Math.floor( ( Math.random() * canvas.width ) + 1 );
-			place.y = Math.floor( ( Math.random() * canvas.height ) + 1 );
+		switch( game.options.layout ){
+			case 'grid':
+				count = 0;
+				side_size = Math.floor( Math.sqrt( number_of_places ) );
+				space = canvas.width / side_size;
+				for ( column = 0; column < side_size; ++column ){
+					for ( row = 0; row < side_size; ++row ){
+						if ( count > number_of_places ){
+							continue;
+						}
+						place = {};
+						place.x = Math.floor( ( column * space ) + (space / 2 ) );
+						place.y = Math.floor( ( row * space ) + ( space / 2 ) );
+						places[ count ] = place;
+						++count;
+					}
+				}
+				break;
+			case 'random':
+			default:
+			    for( count = 0; count < number_of_places; ++count ) {
+					// Set up place positions
+					place = {};
+					place.x = Math.floor( ( Math.random() * canvas.width ) + 1 );
+					place.y = Math.floor( ( Math.random() * canvas.height ) + 1 );
 
-			places[ count ] = place;
-	    }
+					places[ count ] = place;
+			    }
+				break;
+		}
+
+		grid = [];
+		for( column = 0; column < 11; ++column ){
+			grid[ column ] = [];
+			for( row = 0; row < 11;  ++row ){
+				grid[ column ][ row ] = [];
+			}
+		}
+		// Index places by position
+		for( var place_count in places ){
+			x_slot = Math.floor( ( places[ place_count ].x / canvas.width ) * 10 );
+			y_slot = Math.floor( ( places[ place_count ].y / canvas.height ) * 10 );
+			console.log( "X SLOT: " + x_slot );
+			console.log( "Y SLOT: " + y_slot );
+			grid[ x_slot ][ y_slot ][ grid[ x_slot ][ y_slot ].length ] = place_count;
+		}
+		console.log( grid );
 
 	}
 	function get_distance( first, second ){
