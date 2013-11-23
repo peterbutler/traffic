@@ -35,11 +35,14 @@
 	var game = {
 		displays: {
 			potential_places: false,
-			goals:            true,
+			goals:            false,
+			places:           false,
+			travelers:        false,
+			next_chosen:      false,
 		},
-		traveler_count: 100,
-		place_count:    500,
-		single_goal:    false,
+		traveler_count: 500,
+		place_count:    1000,
+		single_goal:    true,
 
 		sizes: {
 			place: 6,
@@ -178,11 +181,12 @@
 		var traveler_canvas = document.getElementById( "traveler-canvas" );
 
 
-		for ( var count in places ){
-			place = places[ count ];
-			context.drawImage(place_canvas, place.x - game.sizes.place, place.y - game.sizes.place );
+		if ( game.displays.places ) {
+			for ( var count in places ){
+				place = places[ count ];
+				context.drawImage(place_canvas, place.x - game.sizes.place, place.y - game.sizes.place );
+			}
 		}
-
 
 
 		if ( game.displays.potential_places ) {
@@ -217,8 +221,9 @@
 		}
 		for ( var count in travelers ){
 			traveler = travelers[ count ];
-			context.drawImage(traveler_canvas, traveler.x - game.sizes.traveler, traveler.y - game.sizes.traveler );
-
+			if ( game.displays.travelers ) {
+				context.drawImage(traveler_canvas, traveler.x - game.sizes.traveler, traveler.y - game.sizes.traveler );
+			}
 			// Draw goal
 			if ( game.displays.goals ) {
 				context.beginPath();
@@ -230,7 +235,7 @@
 			}
 
 			// Draw next chosen
-			if ( traveler.next_place != null ){
+			if ( game.displays.next_chosen && traveler.next_place != null ){
 				context.beginPath();
 				context.arc( places[ traveler.next_place ].x, places[ traveler.next_place ].y, 5 , 0, 2 * Math.PI );
 				context.strokeStyle = '#CC3232';
@@ -288,6 +293,7 @@
 				for( var place_count in places ){
 					valid = false;
 					if ( place_count == this.last_place ){ continue; }
+					if ( in_array( place_count, this.history ) ){ continue; }
 					place = places[ place_count ];
 
 					if ( goal.x < Math.round( this.x ) ) {

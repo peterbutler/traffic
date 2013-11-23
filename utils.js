@@ -32,3 +32,11 @@ function clear_canvas(){
 	var context = canvas_element.getContext("2d");
 	context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
 }
+
+function in_array( needle, haystack ) {
+    var length = haystack.length;
+    for(var i = 0; i < length; i++ ) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
