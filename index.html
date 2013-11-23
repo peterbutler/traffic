@@ -37,12 +37,13 @@
 			potential_places: false,
 			goals:            false,
 			places:           false,
-			travelers:        false,
+			travelers:        true,
 			next_chosen:      false,
+			history:          true,
 		},
-		traveler_count: 500,
+		traveler_count: 1000,
 		place_count:    1000,
-		single_goal:    true,
+		single_goal:    false,
 
 		sizes: {
 			place: 6,
@@ -203,21 +204,23 @@
 
 
 		// Draw History
-		for ( var pair_key in usage_history ){
-			point_indexes = pair_key.split( '.' );
-			start = places[ point_indexes[0] ];
-			finish = places[ point_indexes[1] ];
-			stroke_width = Math.round( usage_history[ pair_key ] );
-			if(stroke_width > 10){
-				stroke_width = 10;
-			}
+		if ( game.displays.history ){
+			for ( var pair_key in usage_history ){
+				point_indexes = pair_key.split( '.' );
+				start = places[ point_indexes[0] ];
+				finish = places[ point_indexes[1] ];
+				stroke_width = Math.round( usage_history[ pair_key ] );
+				if(stroke_width > 10){
+					stroke_width = 10;
+				}
 
-			context.beginPath();
-			context.moveTo( start.x, start.y );
-			context.lineTo( finish.x, finish.y );
-			context.lineWidth = stroke_width;
-			context.strokeStyle = '#000';
-			context.stroke();
+				context.beginPath();
+				context.moveTo( start.x, start.y );
+				context.lineTo( finish.x, finish.y );
+				context.lineWidth = stroke_width;
+				context.strokeStyle = '#000';
+				context.stroke();
+			}
 		}
 		for ( var count in travelers ){
 			traveler = travelers[ count ];
