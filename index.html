@@ -2,7 +2,9 @@
 <html>
 	<head>
 		<title>Traffic</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="utils.js"></script>
+		<script type="text/javascript" src="interface.js"></script>
 		<script type="text/javascript">
     var canvas = new Object;
     canvas.width   = 1000;
@@ -16,6 +18,11 @@
 		init_cached_canvases();
 	};
 
+	function reset(){
+		usage_history = [];
+		init_places( game.place_count );
+		init_travelers( game.traveler_count );
+	}
 
 	function init_cached_canvases(){
 		// Place canvas
@@ -450,8 +457,16 @@
 	<body>
 		<div id="framerate">--</div>
 		<div id="framerate-avg">--</div>
-		<a href="#" onclick="">reset</a>
-		<a href="#" id="toggle-pathfinding-display">pathfinding display</a>
+		<a href="" onclick="reset();">reset</a>
+		<div id="interface">
+			<a href="#"id="reset">reset</a>
+			<div id="displays">
+				<ul>
+					<li><input type="checkbox" id="display-travelers"/><label for="display-travelers">Travelers</label></li>
+				</ul>
+			</div>
+
+		</div>
 		<canvas id="game-canvas" style="border:1px solid #ccc"></canvas>
 		<canvas id="place-canvas" width="12" height="12"></canvas>
 		<canvas id="traveler-canvas" width="8" height="8"></canvas>
