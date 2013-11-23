@@ -8,6 +8,8 @@
     canvas.width   = 1000;
     canvas.height  = 1000;
 
+	var grid = [];
+
 	window.onload = function(){
 		document.getElementById( "game-canvas" ).setAttribute( "width", canvas.width );
 		document.getElementById( "game-canvas" ).setAttribute( "height", canvas.height );
@@ -34,18 +36,18 @@
 
 	var game = {
 		displays: {
-			potential_places: false,
-			goals:            false,
-			places:           false,
+			potential_places: true,
+			goals:            true,
+			places:           true,
 			travelers:        true,
 			next_chosen:      false,
 			history:          true,
 		},
 		options: {
-			layout:           'grid',
+			layout:           'random',
 		},
-		traveler_count: 100,
-		place_count:    100,
+		traveler_count: 1,
+		place_count:    1000,
 		single_goal:    true,
 
 		sizes: {
@@ -185,6 +187,26 @@
 		var traveler_canvas = document.getElementById( "traveler-canvas" );
 
 
+		// Draw grid lines
+		for ( column = 0; column < 11; ++column ){
+			space = canvas.height / 10;
+			context.beginPath();
+			context.moveTo( column * space, 0 );
+			context.lineTo( column * space, canvas.height );
+			context.lineWidth = 1;
+			context.strokeStyle = '#ccc';
+			context.stroke();
+		}
+		for ( row = 0; row < 11; ++row ){
+			space = canvas.width / 10;
+			context.beginPath();
+			context.moveTo( 0, row * space );
+			context.lineTo( canvas.width, row * space );
+			context.lineWidth = 1;
+			context.strokeStyle = '#ccc';
+			context.stroke();
+		}
+
 		if ( game.displays.places ) {
 			for ( var count in places ){
 				place = places[ count ];
@@ -284,6 +306,8 @@
 				return false;
 		    }
 
+
+
 			traveler.choose_next_place = function(){
 				valid_places = new Array;
 				if ( this.next_place != null ){
@@ -347,6 +371,26 @@
 					}
 				}
 
+				valid_places = [];
+
+				current_grid_x = Math.floor( ( this.x / canvas.width ) * 10 );
+				current_grid_y = Math.floor( ( this.y / canvas.height ) * 10 );
+
+				for ( x_grid = current_grid_x - 1; x_grid <= current_grid_x + 1; ++x_grid ){
+					if ( x_grid < 0 || x_grid > 10 ){
+						continue;
+					}
+					for ( y_grid = current_grid_y - 1; y_grid <= current_grid_y + 1; ++y_grid ){
+						if ( y_grid < 0 || y_grid > 10 ){
+							continue;
+						}
+						for( var place_index in grid[ x_grid ][ y_grid ] ){
+							valid_places[ valid_places.length ] = grid[ x_grid ][ y_grid ][ place_index ];
+						}
+					}
+				}
+
+
 			}
 		    travelers[ count ] = traveler;
 	    }
@@ -384,7 +428,6 @@
 				break;
 		}
 
-		grid = [];
 		for( column = 0; column < 11; ++column ){
 			grid[ column ] = [];
 			for( row = 0; row < 11;  ++row ){
@@ -395,12 +438,8 @@
 		for( var place_count in places ){
 			x_slot = Math.floor( ( places[ place_count ].x / canvas.width ) * 10 );
 			y_slot = Math.floor( ( places[ place_count ].y / canvas.height ) * 10 );
-			console.log( "X SLOT: " + x_slot );
-			console.log( "Y SLOT: " + y_slot );
 			grid[ x_slot ][ y_slot ][ grid[ x_slot ][ y_slot ].length ] = place_count;
 		}
-		console.log( grid );
-
 	}
 	function get_distance( first, second ){
 		distance = Math.sqrt( Math.pow( ( first.x - second.x ), 2) + Math.pow( ( first.y - second.y ), 2) );
