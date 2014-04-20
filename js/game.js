@@ -1,17 +1,19 @@
 function Game(){
-	this.canvas_element = document.getElementById( "game-canvas" );
-	this.context        = this.canvas_element.getContext("2d");
+	this.canvas = new Canvas( 'game-canvas', window.innerWidth, window.innerHeight );
+	init_cached_canvases();
 }
 
 Game.prototype = {
 
 	start: function(){
+		init_places( game.place_count );
+		init_travelers( game.traveler_count );
 	    // start the animation
 	    requestAnimFrame( window.gameobj.run );
 	},
 
 	run: function(){
-	    canvas.clear();
+	    gameobj.canvas.clear();
         updateGame();
         drawGame();
         get_framerate();
@@ -19,7 +21,7 @@ Game.prototype = {
 	},
 
 	clear_canvas: function(){
-		this.context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
+		this.context.clearRect( 0, 0, this.canvas.width, this.canvas.height ); // clear canvas
 	}
 
 }
