@@ -4,6 +4,7 @@
 		<title>Traffic</title>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="utils.js"></script>
+		<script type="text/javascript" src="js/game.js"></script>
 		<script type="text/javascript" src="interface.js"></script>
 		<script type="text/javascript">
     var canvas = new Object;
@@ -62,6 +63,9 @@
 			traveler: 4,
 		},
 	}
+	var gameobj = new Game();
+	gameobj.initialize();
+	gameobj.start();
 
     var mainloop = function() {
 	    clear_canvas();
@@ -77,12 +81,6 @@
 		context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
 	}
 
-
-    var recursiveAnim = function() {
-        mainloop();
-        requestAnimFrame( recursiveAnim );
-    };
-
 	var usage_history = [];
 
 	var places = new Array();
@@ -91,8 +89,6 @@
     var travelers = new Array();
 	init_travelers( game.traveler_count );
 
-    // start the animation
-    requestAnimFrame( recursiveAnim );
 
 	var did_tally = false;
     function updateGame(){
