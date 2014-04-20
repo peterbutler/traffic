@@ -16,7 +16,10 @@ Game.prototype = {
 	},
 
 	run: function(){
-		mainloop();
+	    canvas.clear();
+        updateGame();
+        drawGame();
+        get_framerate();
         requestAnimFrame( window.gameobj.run );
 	},
 
