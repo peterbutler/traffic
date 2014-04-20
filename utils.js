@@ -1,3 +1,12 @@
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame ||
+	window.webkitRequestAnimationFrame   ||
+	window.mozRequestAnimationFrame      ||
+	function( callback ){
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
 window.performance = window.performance || {};
 performance.now = (function() {
     return performance.now       ||
