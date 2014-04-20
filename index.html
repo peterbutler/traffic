@@ -75,18 +75,13 @@
 	}
 
     var mainloop = function() {
-	    clear_canvas();
+	    canvas.clear();
         updateGame();
         drawGame();
         get_framerate();
 
     };
 
-	function clear_canvas(){
-		var canvas_element  = document.getElementById( "game-canvas" );
-		var context = canvas_element.getContext("2d");
-		context.clearRect( 0, 0, canvas.width, canvas.height ); // clear canvas
-	}
 
 	var usage_history = [];
 
