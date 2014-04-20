@@ -15,6 +15,7 @@
 	var places;
 	var valid_places;
 	var travelers;
+
 	window.onload = function(){
 		console.log('window is loaded');
 		canvas = new Canvas( 'game-canvas', window.innerWidth, window.innerHeight );
@@ -36,12 +37,14 @@
 	}
 
 	function init_cached_canvases(){
+		var place_sprite = new Canvas( 'place-canvas' );
+
 		// Place canvas
 		var canvas_element = document.getElementById( "place-canvas" );
 		var context = canvas_element.getContext( "2d" );
-		context.beginPath();
-		context.arc( game.sizes.place, game.sizes.place, game.sizes.place , 0, 2 * Math.PI );
-		context.stroke();
+		place_sprite.context.beginPath();
+		place_sprite.context.arc( game.sizes.place, game.sizes.place, game.sizes.place , 0, 2 * Math.PI );
+		place_sprite.context.stroke();
 
 		var canvas_element = document.getElementById( "traveler-canvas" );
 		var context = canvas_element.getContext( "2d" );
