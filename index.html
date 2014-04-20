@@ -5,18 +5,28 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="utils.js"></script>
 		<script type="text/javascript" src="js/game.js"></script>
+		<script type="text/javascript" src="js/canvas.js"></script>
 		<script type="text/javascript" src="interface.js"></script>
 		<script type="text/javascript">
-    var canvas = new Object;
-    canvas.width   = window.innerWidth;
-    canvas.height  = window.innerHeight;
 
 	var grid = [];
-
+	var canvas;
+	var gameobj;
+	var places;
+	var valid_places;
+	var travelers;
 	window.onload = function(){
-		document.getElementById( "game-canvas" ).setAttribute( "width", canvas.width );
-		document.getElementById( "game-canvas" ).setAttribute( "height", canvas.height );
+		console.log('window is loaded');
+		canvas = new Canvas( 'game-canvas', window.innerWidth, window.innerHeight );
 		init_cached_canvases();
+		 gameobj = new Game();
+		gameobj.initialize();
+		gameobj.start();
+		places = new Array();
+		init_places( game.place_count );
+	    valid_places = new Array();
+	    travelers = new Array();
+		init_travelers( game.traveler_count );
 	};
 
 	function reset(){
@@ -63,9 +73,6 @@
 			traveler: 4,
 		},
 	}
-	var gameobj = new Game();
-	gameobj.initialize();
-	gameobj.start();
 
     var mainloop = function() {
 	    clear_canvas();
@@ -83,11 +90,6 @@
 
 	var usage_history = [];
 
-	var places = new Array();
-	init_places( game.place_count );
-    var valid_places = new Array();
-    var travelers = new Array();
-	init_travelers( game.traveler_count );
 
 
 	var did_tally = false;
