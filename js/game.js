@@ -1,14 +1,9 @@
 function Game(){
-
+	this.canvas_element = document.getElementById( "game-canvas" );
+	this.context        = this.canvas_element.getContext("2d");
 }
 
 Game.prototype = {
-
-	initialize: function(){
-		this.canvas_element = document.getElementById( "game-canvas" );
-		this.context        = this.canvas_element.getContext("2d");
-
-	},
 
 	start: function(){
 	    // start the animation
