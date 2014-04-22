@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="js/game.js"></script>
 		<script type="text/javascript" src="js/canvas.js"></script>
 		<script type="text/javascript" src="interface.js"></script>
+		<script type="text/javascript" src="js/traveler.js"></script>
 		<script type="text/javascript">
 
 	var grid = [];
@@ -16,7 +17,6 @@
 	var travelers;
 
 	window.onload = function(){
-		console.log('window is loaded');
 		gameobj = new Game();
 		gameobj.start();
 	};
@@ -255,119 +255,8 @@
     	travelers = [];
     	single_goal = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
 	    for( count = 0; count < number_of_travelers; ++count ) {
-		    traveler = {};
-		    traveler.arrived = false;
-		    traveler.start_place_index = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
-		    if ( game.single_goal ){
-			    traveler.goal_place_index = single_goal;
-		    } else {
-			    while( traveler.goal_place_index == null || traveler.goal_place_index == traveler.start_place_index ){
-				    traveler.goal_place_index  = Math.floor( ( Math.random() * places.length - 1 ) + 1 );
-			    }
-		    }
-		    traveler.last_place = traveler.start_place_index;
-		    traveler.next_place = null;
-		    traveler.x          = places[ traveler.start_place_index ].x;
-		    traveler.y          = places[ traveler.start_place_index ].y;
-		    traveler.x_speed = 0;
-		    traveler.y_speed = 0;
-		    traveler.history = [];
-		    traveler.distance_traveled = 0;
-		    traveler.has_arrived = function( place_index ){
-				if( Math.round( this.x ) == places[ place_index ].x &&
-					Math.round( this.y ) == places[ place_index ].y
-				){
-					return true;
-				}
-				return false;
-		    }
-
-
-
-			traveler.choose_next_place = function(){
-				valid_places = new Array;
-				if ( this.next_place != null ){
-					this.last_place = this.next_place;
-				}
-				this.x == places[ this.last_place ].x;
-				this.y == places[ this.last_place ].y;
-
-				this.history[ this.history.length ] = this.last_place;
-				goal = places[ this.goal_place_index ];
-				x_diff = this.x - goal.x;
-				y_diff = this.y - goal.y;
-				shortest_distance = null;
-				for( var place_count in places ){
-					valid = false;
-
-					if ( place_count == this.last_place ){ continue; }
-					if ( in_array( place_count, this.history ) ){ continue; }
-					place = places[ place_count ];
-
-					if ( goal.x <= Math.round( this.x ) ) {
-						if ( place.x <= this.x ){
-							valid = true;
-						} else {
-							valid = false;
-							continue;
-						}
-					} else {
-						if ( place.x >= Math.round( this.x ) ) {
-							valid = true;
-						} else {
-							valid = false;
-							continue;
-						}
-					}
-
-					if ( goal.y <= Math.round( this.y ) ) {
-						if ( place.y <= this.y ){
-							valid = true;
-						} else {
-							valid = false;
-							continue;
-						}
-					} else {
-						if ( place.y >= Math.round( this.y ) ) {
-							valid = true;
-						} else {
-							valid = false;
-							continue;
-						}
-					}
-
-					if ( valid ){
-						valid_places[ valid_places.length ] = place_count;
-						// this place is in the right direction.
-						distance = get_distance( this, place );
-						if ( distance < shortest_distance || shortest_distance === null ){
-							shortest_distance = distance;
-							this.next_place = place_count;
-						}
-					}
-				}
-
-				valid_places = [];
-
-				current_grid_x = Math.floor( ( this.x / gameobj.canvas.width ) * 10 );
-				current_grid_y = Math.floor( ( this.y / gameobj.canvas.height ) * 10 );
-
-				for ( x_grid = current_grid_x - 1; x_grid <= current_grid_x + 1; ++x_grid ){
-					if ( x_grid < 0 || x_grid > 10 ){
-						continue;
-					}
-					for ( y_grid = current_grid_y - 1; y_grid <= current_grid_y + 1; ++y_grid ){
-						if ( y_grid < 0 || y_grid > 10 ){
-							continue;
-						}
-						for( var place_index in grid[ x_grid ][ y_grid ] ){
-							valid_places[ valid_places.length ] = grid[ x_grid ][ y_grid ][ place_index ];
-						}
-					}
-				}
-
-
-			}
+	    	traveler = new Traveler();
+	    	traveler.reset();
 		    travelers[ count ] = traveler;
 	    }
     }

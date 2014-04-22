@@ -1,5 +1,6 @@
 function Game(){
 	this.canvas = new Canvas( 'game-canvas', window.innerWidth, window.innerHeight );
+	console.log( this );
 	init_cached_canvases();
 }
 
