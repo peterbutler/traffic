@@ -1,24 +1,40 @@
 function Game(){
 	this.canvas = new Canvas( 'game-canvas', window.innerWidth, window.innerHeight );
-	console.log( this );
-	init_cached_canvases();
 }
 
 Game.prototype = {
+	displays: {
+		potential_places: false,
+		goals:            true,
+		places:           true,
+		travelers:        true,
+		next_chosen:      false,
+		history:          true,
+	},
+	options: {
+		layout:           'random',
+	},
+	traveler_count: 50,
+	place_count:    500,
+	single_goal:    true,
 
+	sizes: {
+		place: 6,
+		traveler: 4,
+	},
 	start: function(){
 		init_places( game.place_count );
 		init_travelers( game.traveler_count );
 	    // start the animation
-	    requestAnimFrame( window.gameobj.run );
+	    requestAnimFrame( window.game.run );
 	},
 
 	run: function(){
-	    gameobj.canvas.clear();
+	    game.canvas.clear();
         updateGame();
         drawGame();
         get_framerate();
-        requestAnimFrame( window.gameobj.run );
+        requestAnimFrame( window.game.run );
 	},
 
 	clear_canvas: function(){

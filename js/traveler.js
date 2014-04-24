@@ -94,8 +94,8 @@ Traveler.prototype = {
 
 		valid_places = [];
 
-		current_grid_x = Math.floor( ( this.x / gameobj.canvas.width ) * 10 );
-		current_grid_y = Math.floor( ( this.y / gameobj.canvas.height ) * 10 );
+		current_grid_x = Math.floor( ( this.x / game.canvas.width ) * 10 );
+		current_grid_y = Math.floor( ( this.y / game.canvas.height ) * 10 );
 
 		for ( x_grid = current_grid_x - 1; x_grid <= current_grid_x + 1; ++x_grid ){
 			if ( x_grid < 0 || x_grid > 10 ){

@@ -11,14 +11,17 @@
 		<script type="text/javascript">
 
 	var grid = [];
-	var gameobj;
+	var game;
 	var places;
 	var valid_places;
 	var travelers;
 
 	window.onload = function(){
-		gameobj = new Game();
-		gameobj.start();
+		game = new Game();
+		game.start();
+		init_cached_canvases();
+		init_interface();
+
 	};
 
 	function reset(){
@@ -40,28 +43,6 @@
 		traveler_sprite.context.arc( game.sizes.traveler, game.sizes.traveler, game.sizes.traveler , 0, 2 * Math.PI );
 		traveler_sprite.context.strokeStyle = '#ff0000';
 		traveler_sprite.context.stroke();
-	}
-
-	var game = {
-		displays: {
-			potential_places: false,
-			goals:            true,
-			places:           true,
-			travelers:        true,
-			next_chosen:      false,
-			history:          true,
-		},
-		options: {
-			layout:           'random',
-		},
-		traveler_count: 50,
-		place_count:    500,
-		single_goal:    true,
-
-		sizes: {
-			place: 6,
-			traveler: 4,
-		},
 	}
 
 	var usage_history = [];
@@ -164,19 +145,19 @@
 
 		// Draw grid lines
 		for ( column = 0; column < 11; ++column ){
-			space = gameobj.canvas.width / 10;
+			space = game.canvas.width / 10;
 			context.beginPath();
 			context.moveTo( column * space, 0 );
-			context.lineTo( column * space, gameobj.canvas.height );
+			context.lineTo( column * space, game.canvas.height );
 			context.lineWidth = 1;
 			context.strokeStyle = '#ccc';
 			context.stroke();
 		}
 		for ( row = 0; row < 11; ++row ){
-			space = gameobj.canvas.height / 10;
+			space = game.canvas.height / 10;
 			context.beginPath();
 			context.moveTo( 0, row * space );
-			context.lineTo( gameobj.canvas.width, row * space );
+			context.lineTo( game.canvas.width, row * space );
 			context.lineWidth = 1;
 			context.strokeStyle = '#ccc';
 			context.stroke();
@@ -267,7 +248,7 @@
 			case 'grid':
 				count = 0;
 				side_size = Math.floor( Math.sqrt( number_of_places ) );
-				space = gameobj.canvas.width / side_size;
+				space = game.canvas.width / side_size;
 				for ( column = 0; column < side_size; ++column ){
 					for ( row = 0; row < side_size; ++row ){
 						if ( count > number_of_places ){
@@ -283,12 +264,11 @@
 				break;
 			case 'random':
 			default:
-				console.log(gameobj);
 			    for( count = 0; count < number_of_places; ++count ) {
 					// Set up place positions
 					place = {};
-					place.x = Math.floor( ( Math.random() * gameobj.canvas.width ) + 1 );
-					place.y = Math.floor( ( Math.random() * gameobj.canvas.height ) + 1 );
+					place.x = Math.floor( ( Math.random() * game.canvas.width ) + 1 );
+					place.y = Math.floor( ( Math.random() * game.canvas.height ) + 1 );
 
 					places[ count ] = place;
 			    }
@@ -303,8 +283,8 @@
 		}
 		// Index places by position
 		for( var place_count in places ){
-			x_slot = Math.floor( ( places[ place_count ].x / gameobj.canvas.width ) * 10 );
-			y_slot = Math.floor( ( places[ place_count ].y / gameobj.canvas.height ) * 10 );
+			x_slot = Math.floor( ( places[ place_count ].x / game.canvas.width ) * 10 );
+			y_slot = Math.floor( ( places[ place_count ].y / game.canvas.height ) * 10 );
 			grid[ x_slot ][ y_slot ][ grid[ x_slot ][ y_slot ].length ] = place_count;
 		}
 	}

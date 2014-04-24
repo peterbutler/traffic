@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+function init_interface(){
 	// Set up display toggles
 	for( var item_name in window.game.displays ) {
 		checked = '';
@@ -45,8 +45,4 @@ $( document ).ready(function() {
 			window.game.single_goal = false;
 		}
 	})
-});
-
-
-
-
+}
