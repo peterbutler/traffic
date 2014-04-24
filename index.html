@@ -31,18 +31,21 @@
 	}
 
 	function init_cached_canvases(){
+		var traveler_sprite = new Canvas( 'traveler-canvas' );
+		traveler_sprite.context.beginPath();
+		traveler_sprite.context.arc( game.sizes.traveler + 2, game.sizes.traveler + 2, game.sizes.traveler , 0, 2 * Math.PI );
+		traveler_sprite.context.fillStyle = '#00B4FF';
+		traveler_sprite.context.fill();
+		traveler_sprite.context.strokeStyle = '#006B99';
+		traveler_sprite.context.lineWidth = 1.5;
+		traveler_sprite.context.stroke();
+
 		var place_sprite = new Canvas( 'place-canvas' );
 
 		// Place canvas
 		place_sprite.context.beginPath();
 		place_sprite.context.arc( game.sizes.place, game.sizes.place, game.sizes.place , 0, 2 * Math.PI );
 		place_sprite.context.stroke();
-
-		var traveler_sprite = new Canvas( 'traveler-canvas' );
-		traveler_sprite.context.beginPath();
-		traveler_sprite.context.arc( game.sizes.traveler, game.sizes.traveler, game.sizes.traveler , 0, 2 * Math.PI );
-		traveler_sprite.context.strokeStyle = '#ff0000';
-		traveler_sprite.context.stroke();
 	}
 
 	var usage_history = [];
@@ -206,7 +209,7 @@
 		for ( var count in travelers ){
 			traveler = travelers[ count ];
 			if ( game.displays.travelers ) {
-				context.drawImage(traveler_canvas, traveler.x - game.sizes.traveler, traveler.y - game.sizes.traveler );
+				traveler.draw();
 			}
 			// Draw goal
 			if ( game.displays.goals ) {
@@ -313,6 +316,6 @@
 		</div>
 		<canvas id="game-canvas"></canvas>
 		<canvas id="place-canvas" width="12" height="12" style="display:none"></canvas>
-		<canvas id="traveler-canvas" width="8" height="8" style="display:none"></canvas>
+		<canvas id="traveler-canvas" width="16" height="16" style="display:none"></canvas>
 	</body>
 </html>

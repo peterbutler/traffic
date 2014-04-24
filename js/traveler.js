@@ -1,5 +1,7 @@
 function Traveler() {
 	this.arrived = false;
+	this.canvas = document.getElementById( "traveler-canvas" );
+
 }
 
 Traveler.prototype = {
@@ -21,6 +23,10 @@ Traveler.prototype = {
 		    }
 	    }
 	},
+	draw: function(){
+		game.canvas.context.drawImage(this.canvas, this.x - game.sizes.traveler, this.y - game.sizes.traveler );
+	},
+
 	has_arrived: function( place_index ){
 		if( Math.round( this.x ) == places[ place_index ].x &&
 			Math.round( this.y ) == places[ place_index ].y
