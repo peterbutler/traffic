@@ -34,6 +34,7 @@
 		var traveler_sprite = new Canvas( 'traveler-canvas' );
 		traveler_sprite.context.beginPath();
 		traveler_sprite.context.arc( game.sizes.traveler + 2, game.sizes.traveler + 2, game.sizes.traveler , 0, 2 * Math.PI );
+		traveler_sprite.context.globalAlpha = .1;
 		traveler_sprite.context.fillStyle = '#00B4FF';
 		traveler_sprite.context.fill();
 		traveler_sprite.context.strokeStyle = '#006B99';
@@ -86,28 +87,8 @@
 
 				// we need to choose a direction to go next
 				traveler.choose_next_place();
-				place = places[ traveler.next_place ];
-				x_distance = traveler.x - place.x;
-				y_distance = traveler.y - place.y;
-				if ( Math.abs( x_distance ) > Math.abs( y_distance ) ){
-					traveler.x_speed = 1;
-					traveler.y_speed = Math.abs( y_distance ) / Math.abs( x_distance );
-				} else {
-					traveler.y_speed = 1;
-					traveler.x_speed = Math.abs( x_distance ) / Math.abs( y_distance );
-				}
-				if ( x_distance > 0 ){
-					traveler.x_speed = traveler.x_speed * -1;
-				}
-				if ( y_distance > 0 ){
-					traveler.y_speed = traveler.y_speed * -1;
-				}
 			}
-
-			// Now move the traveler towards the next place
-
-			traveler.x += traveler.x_speed;
-			traveler.y += traveler.y_speed;
+				traveler.move();
 			travelers[ count ] = traveler;
 		}
 
@@ -143,7 +124,6 @@
 		var canvas_element = document.getElementById( "game-canvas" );
 		var context = canvas_element.getContext( "2d" );
 		var place_canvas = document.getElementById( "place-canvas" );
-		var traveler_canvas = document.getElementById( "traveler-canvas" );
 
 
 		// Draw grid lines

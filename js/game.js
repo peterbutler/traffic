@@ -14,7 +14,7 @@ Game.prototype = {
 	options: {
 		layout:           'random',
 	},
-	traveler_count: 50,
+	traveler_count: 1,
 	place_count:    500,
 	single_goal:    true,
 

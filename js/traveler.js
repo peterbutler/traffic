@@ -118,7 +118,28 @@ Traveler.prototype = {
 		}
 
 
+	},
+	move: function(){
+		place = places[ this.next_place ];
+		x_distance = this.x - place.x;
+		y_distance = this.y - place.y;
+		if ( Math.abs( x_distance ) > Math.abs( y_distance ) ){
+			this.x_speed = 1;
+			this.y_speed = Math.abs( y_distance ) / Math.abs( x_distance );
+		} else {
+			this.y_speed = 1;
+			this.x_speed = Math.abs( x_distance ) / Math.abs( y_distance );
+		}
+		if ( x_distance > 0 ){
+			this.x_speed = this.x_speed * -1;
+		}
+		if ( y_distance > 0 ){
+			this.y_speed = traveler.y_speed * -1;
+		}
+		this.x += this.x_speed;
+		this.y += this.y_speed;
 	}
+
 }
 
 function Canvas( element, width, height ){
